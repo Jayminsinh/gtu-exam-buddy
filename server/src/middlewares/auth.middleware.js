@@ -40,13 +40,31 @@ export const authenticate = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    // Verify access token
     const decoded = jwt.verify(token, config.jwt.access.secret);
 
+    // Debug log to inspect incoming token payload keys in your console
+    console.log('Decoded token payload:', decoded);
+
+    if (!decoded || typeof decoded !== 'object') {
+      throw ApiError.unauthorized('Invalid token payload.');
+    }
+
+    const userId = decoded._id || decoded.id || decoded.userId;
+
+    if (!userId) {
+      throw ApiError.unauthorized(
+        `Token payload has no user identifier. Decoded keys: [${Object.keys(decoded).join(', ')}]`
+      );
+    }
+
+
+
     // Fetch the user from database
-    const user = await User.findById(decoded._id);
+    const user = await User.findById(userId);
     if (!user) {
-      throw ApiError.unauthorized('The user belonging to this token no longer exists.');
+      throw ApiError.unauthorized(
+        `The user belonging to this token no longer exists. Lookup ID: "${userId}"`
+      );
     }
 
     // Attach user instance to request object
@@ -106,13 +124,13 @@ export const authorize = (...roles) => {
  */
 export const validate = (schema) => {
   return asyncHandler(async (req, res, next) => {
-    const parseResult = await schema.safeParseAsync(req.body);
+    const parseResult = await schema.safeParseAsync(req.body || {});
 
     if (!parseResult.success) {
       // Structure all Zod errors to return field name and failure message
-      const errors = parseResult.error.errors.map((err) => ({
-        field: err.path.join('.'),
-        message: err.message,
+      const errors = (parseResult.error?.issues || parseResult.error?.errors || []).map((err) => ({
+        field: err?.path?.join('.') || '',
+        message: err?.message || '',
       }));
 
       throw ApiError.unprocessable('Validation failed. Please correct your inputs.', errors);

@@ -1,0 +1,9 @@
+{
+    "window.autoDetectColorScheme": false,
+    "workbench.preferredDarkColorTheme": "Visual Studio Dark",
+    "workbench.iconTheme": "vs-seti",
+    "workbench.preferredHighContrastColorTheme": "Visual Studio Dark",
+    "workbench.preferredHighContrastLightColorTheme": "Visual Studio Dark",
+    "workbench.preferredLightColorTheme": "Default Dark Modern",
+    "workbench.colorTheme": "Default Dark Modern"
+}

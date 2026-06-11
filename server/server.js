@@ -10,6 +10,9 @@ import app from './src/app.js';
 import config from './src/config/index.js';
 import connectDB from './src/config/db.js';
 import mongoose from 'mongoose';
+import dns from 'dns';
+
+dns.setServers(["1.1.1.1","8.8.8.8"])
 
 let server;
 
