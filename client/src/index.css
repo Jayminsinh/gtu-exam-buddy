@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Quiet Luxury Palette ─────────────────────── */
+  --color-luxury-ivory: #F7F4EF;
+  --color-luxury-gold: #C9A96E;
+  --color-luxury-espresso: #1C1917;
+  --color-luxury-charcoal: #2E2A25;
+  --color-luxury-taupe: #A89F91;
+  --color-luxury-cream: #FAF8F5;
+
+  /* ── Editorial Typography ─────────────────────── */
+  --font-serif: "Playfair Display", "Didot", "Georgia", serif;
+  --font-sans: "Inter", "Inter Var", system-ui, sans-serif;
+}
+
+/* ── Base Layer ──────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-height: 100vh;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+  }
+
+  ::selection {
+    background-color: #C9A96E33;
+    color: #1C1917;
+  }
+
+  /* Reset focus rings to match luxury aesthetic */
+  :focus-visible {
+    outline: 1px solid #C9A96E;
+    outline-offset: 2px;
+  }
+}
+
+/* ── Utility: Thin Borders ───────────────────────── */
+@layer utilities {
+  .border-thin {
+    border-width: 0.5px;
+  }
+}

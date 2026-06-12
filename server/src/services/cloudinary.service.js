@@ -29,13 +29,14 @@ const uploadPDF = async (localFilePath) => {
       throw ApiError.internal('File not found on local server during upload phase.');
     }
 
-    // 2. Upload to Cloudinary
-    // We use folder mapping to organize assets, and resource_type: 'auto' so Cloudinary
-    // determines the file type (PDFs can be processed as raw files or images).
-    const uploadResult = await cloudinary.uploader.upload(localFilePath, {
-      folder: 'gtu_exam_buddy/papers',
-      resource_type: 'auto',
-    });
+    // 2. Upload to Cloudinary using Unsigned Upload with the preset token
+    const uploadResult = await cloudinary.uploader.unsigned_upload(
+      localFilePath,
+      process.env.CLOUDINARY_UPLOAD_PRESET,
+      {
+        resource_type: 'auto',
+      }
+    );
 
     // 3. Delete the local temporary file asynchronously (fire-and-forget style logging on error)
     fs.promises.unlink(localFilePath).catch((err) => {
@@ -79,12 +80,9 @@ const deletePDF = async (publicId) => {
 
   try {
     // Note: If resource_type is not specified, Cloudinary defaults to 'image'.
-    // Since PDFs can be registered as 'image' or 'raw' depending on the upload flow,
-    // we use resource_type: 'image' or default. Since we used resource_type: 'auto' above,
-    // Cloudinary usually treats PDFs as 'image' (if PDF page transformations are enabled)
-    // or 'raw'. Let's attempt deletion using 'image' first, or pass it dynamically.
+    // Since PDFs are uploaded as 'raw', we must specify resource_type: 'raw' to delete them.
     const result = await cloudinary.uploader.destroy(publicId, {
-      resource_type: 'image', // Adjust if raw files are uploaded instead
+      resource_type: 'raw',
     });
 
     if (result.result !== 'ok') {

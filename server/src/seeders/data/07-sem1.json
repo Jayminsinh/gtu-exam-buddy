@@ -1,0 +1,8 @@
+[
+  { "code": "3110014", "name": "Mathematics - 1", "credits": 5 },
+  { "code": "3110015", "name": "Physics", "credits": 5 },
+  { "code": "3110005", "name": "Basic Electrical Engineering", "credits": 5 },
+  { "code": "3110007", "name": "Environmental Sciences", "credits": 1 },
+  { "code": "3110016", "name": "Induction Program", "credits": 1 },
+  { "code": "3110018", "name": "Physics Lab / Workshop", "credits": 2 }
+]
