@@ -110,6 +110,24 @@ export default function Subjects() {
     }
   };
 
+  // ─── Handle Deletion ───────────────────────────────────────
+  const handleDeleteSubject = async (id) => {
+    if (!isAdmin) return;
+    if (!window.confirm('Are you sure you want to delete this subject registry entry?')) {
+      return;
+    }
+
+    try {
+      await api.delete(`/subjects/${id}`);
+      setSubjects((prev) => prev.filter((sub) => sub._id !== id));
+      toast.success('Subject entry deleted successfully.');
+    } catch (error) {
+      console.error('Failed to delete subject:', error);
+      const errMsg = error.response?.data?.message || 'Failed to delete subject.';
+      toast.error(errMsg);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-8 w-full max-w-5xl">
       {/* Header section */}
@@ -166,6 +184,11 @@ export default function Subjects() {
                 <th className="py-4 font-sans text-[10px] tracking-[0.3em] uppercase text-luxury-taupe font-normal w-1/12">
                   CREDITS
                 </th>
+                {isAdmin && (
+                  <th className="py-4 font-sans text-[10px] tracking-[0.3em] uppercase text-luxury-taupe font-normal w-1/6 text-right">
+                    ACTION
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody>
@@ -191,6 +214,17 @@ export default function Subjects() {
                   <td className="py-5 font-sans text-xs text-luxury-espresso">
                     {sub.credits}
                   </td>
+                  {isAdmin && (
+                    <td className="py-5 text-right">
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteSubject(sub._id)}
+                        className="font-sans text-[10px] tracking-[0.25em] uppercase text-red-700/80 hover:text-red-950 transition-colors duration-300 border-b border-red-700/20 hover:border-red-950/40 pb-0.5"
+                      >
+                        DELETE
+                      </button>
+                    </td>
+                  )}
                 </motion.tr>
               ))}
             </tbody>

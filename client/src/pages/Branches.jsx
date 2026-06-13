@@ -61,6 +61,24 @@ export default function Branches() {
     }
   };
 
+  // ─── Handle Deletion ───────────────────────────────────────
+  const handleDeleteBranch = async (id) => {
+    if (!isAdmin) return;
+    if (!window.confirm('Are you sure you want to delete this academic branch?')) {
+      return;
+    }
+
+    try {
+      await api.delete(`/branch/${id}`);
+      setBranches((prev) => prev.filter((b) => b._id !== id));
+      toast.success('Branch entry deleted successfully.');
+    } catch (error) {
+      console.error('Failed to delete branch:', error);
+      const errMsg = error.response?.data?.message || 'Failed to delete branch.';
+      toast.error(errMsg);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-8 w-full max-w-5xl">
       {/* Header section */}
@@ -111,6 +129,11 @@ export default function Branches() {
                 <th className="py-4 font-sans text-[10px] tracking-[0.3em] uppercase text-luxury-taupe font-normal w-1/4">
                   STATUS
                 </th>
+                {isAdmin && (
+                  <th className="py-4 font-sans text-[10px] tracking-[0.3em] uppercase text-luxury-taupe font-normal w-1/6 text-right">
+                    ACTION
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody>
@@ -134,6 +157,17 @@ export default function Branches() {
                       <span className="text-luxury-taupe/60">INACTIVE</span>
                     )}
                   </td>
+                  {isAdmin && (
+                    <td className="py-5 text-right">
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteBranch(branch._id)}
+                        className="font-sans text-[10px] tracking-[0.25em] uppercase text-red-700/80 hover:text-red-950 transition-colors duration-300 border-b border-red-700/20 hover:border-red-950/40 pb-0.5"
+                      >
+                        DELETE
+                      </button>
+                    </td>
+                  )}
                 </motion.tr>
               ))}
             </tbody>

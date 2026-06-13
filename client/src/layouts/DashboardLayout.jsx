@@ -66,6 +66,19 @@ function SidebarContent({ onNavigate }) {
   const { logout, user } = useAuth();
   const isAdmin = user?.role === 'admin';
 
+  // Define navigation items dynamically based on role
+  const dynamicNavItems = isAdmin 
+    ? [
+        { label: 'BRANCHES', path: '/dashboard/branches' },
+        { label: 'SEMESTERS', path: '/dashboard/semesters' },
+        { label: 'SUBJECTS', path: '/dashboard/subjects' },
+        { label: 'PAPERS', path: '/dashboard/papers' },
+      ]
+    : [
+        { label: '📚 MY CLASSROOM', path: '/dashboard' },
+        { label: '🤖 AI EXAM ASSISTANT', path: '/dashboard/ai-assistant' },
+      ];
+
   return (
     <div className="flex flex-col h-full px-8 py-10">
       {/* Brand Mark */}
@@ -84,12 +97,13 @@ function SidebarContent({ onNavigate }) {
       {/* Navigation */}
       <nav className="flex flex-col gap-1 flex-1">
         <p className="font-sans text-[9px] tracking-[0.3em] uppercase text-luxury-taupe mb-4">
-          MANAGE
+          {isAdmin ? 'MANAGE' : 'PORTAL'}
         </p>
-        {navItems.map((item) => (
+        {dynamicNavItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
+            end={item.path === '/dashboard'} // Make sure exact match is active on classroom root
             onClick={onNavigate}
             className={({ isActive }) =>
               [
@@ -113,11 +127,6 @@ function SidebarContent({ onNavigate }) {
                   transition={{ duration: 0.35, ease: 'easeOut' }}
                 />
                 <span>{item.label}</span>
-                {!isAdmin && (
-                  <span className="font-sans text-[8px] tracking-widest text-luxury-taupe/50 lowercase mr-4">
-                    (read-only)
-                  </span>
-                )}
               </>
             )}
           </NavLink>

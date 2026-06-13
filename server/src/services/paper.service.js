@@ -5,7 +5,7 @@
  */
 
 import Paper from '../models/paper.model.js';
-import cloudinaryService from './cloudinary.service.js';
+import supabaseService from './supabase.service.js';
 import ApiError from '../utils/ApiError.js';
 import { PAGINATION } from '../utils/constants.js';
 
@@ -19,10 +19,10 @@ import { PAGINATION } from '../utils/constants.js';
  * @returns {Promise<Object>} - The newly created Paper document
  */
 const uploadPaper = async ({ metadata, localFilePath, userId }) => {
-  // 1. Upload file to Cloudinary
-  const { secure_url, public_id } = await cloudinaryService.uploadPDF(localFilePath);
+  // 1. Upload file to Supabase Storage
+  const { secure_url, public_id } = await supabaseService.uploadPDF(localFilePath);
 
-  // 2. Write metadata and Cloudinary URLs to MongoDB
+  // 2. Write metadata and Supabase URLs to MongoDB
   const paper = await Paper.create({
     ...metadata,
     fileUrl: secure_url,
@@ -155,8 +155,8 @@ const deletePaper = async (id) => {
     throw ApiError.notFound('Question paper not found.');
   }
 
-  // 1. Delete physical asset from Cloudinary
-  await cloudinaryService.deletePDF(paper.publicId);
+  // 1. Delete physical asset from Supabase Storage
+  await supabaseService.deletePDF(paper.publicId);
 
   // 2. Remove document from database
   await paper.deleteOne();

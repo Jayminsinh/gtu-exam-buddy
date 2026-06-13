@@ -1,7 +1,7 @@
 {
     "window.autoDetectColorScheme": false,
     "workbench.preferredDarkColorTheme": "Visual Studio Dark",
-    "workbench.iconTheme": "vs-seti",
+    "workbench.iconTheme": "vscode-icons",
     "workbench.preferredHighContrastColorTheme": "Visual Studio Dark",
     "workbench.preferredHighContrastLightColorTheme": "Visual Studio Dark",
     "workbench.preferredLightColorTheme": "Dark Modern",

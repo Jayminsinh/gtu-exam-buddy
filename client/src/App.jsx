@@ -14,6 +14,7 @@ import Semesters from './pages/Semesters';
 import Subjects from './pages/Subjects';
 import Papers from './pages/Papers';
 import StudentSearch from './pages/StudentSearch';
+import AiAssistant from './pages/AiAssistant';
 import DashboardLayout from './layouts/DashboardLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -45,6 +46,7 @@ function App() {
             <Route path="/dashboard" element={<DashboardLayout />}>
               {/* Student Search and Nested CRUD pages */}
               <Route index element={<StudentSearch />} />
+              <Route path="ai-assistant" element={<AiAssistant />} />
               <Route path="branches" element={<Branches />} />
               <Route path="semesters" element={<Semesters />} />
               <Route path="subjects" element={<Subjects />} />

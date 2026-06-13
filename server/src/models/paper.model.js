@@ -67,7 +67,7 @@ const paperSchema = new mongoose.Schema(
     },
     publicId: {
       type: String,
-      required: [true, 'Cloudinary file public ID is required'],
+      required: [true, 'Storage file path identifier is required'],
     },
     uploadedBy: {
       type: mongoose.Schema.Types.ObjectId,

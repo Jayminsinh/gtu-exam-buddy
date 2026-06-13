@@ -159,6 +159,24 @@ export default function Papers() {
     }
   };
 
+  // ─── Handle Deletion ───────────────────────────────────────
+  const handleDeletePaper = async (id) => {
+    if (!isAdmin) return;
+    if (!window.confirm('Are you sure you want to delete this archived paper?')) {
+      return;
+    }
+
+    try {
+      await api.delete(`/papers/${id}`);
+      setPapers((prev) => prev.filter((p) => p._id !== id));
+      toast.success('Archived paper deleted successfully.');
+    } catch (error) {
+      console.error('Failed to delete paper:', error);
+      const errMsg = error.response?.data?.message || 'Failed to delete paper.';
+      toast.error(errMsg);
+    }
+  };
+
   // ─── Display Helpers ────────────────────────────────────
   const formatSeason = (examTypeVal) => {
     if (!examTypeVal) return '—';
@@ -254,15 +272,24 @@ export default function Papers() {
                   <td className="py-5 font-sans text-xs tracking-widest text-luxury-espresso uppercase">
                     {paper.branch || '—'}
                   </td>
-                  <td className="py-5 text-right">
+                  <td className="py-5 text-right space-x-4">
                     <a
                       href={paper.fileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-sans text-[10px] tracking-[0.25em] uppercase text-luxury-gold hover:text-luxury-espresso transition-colors duration-300 border-b border-luxury-gold/30 hover:border-luxury-espresso/50 pb-0.5"
+                      className="inline-block font-sans text-[10px] tracking-[0.25em] uppercase text-luxury-gold hover:text-luxury-espresso transition-colors duration-300 border-b border-luxury-gold/30 hover:border-luxury-espresso/50 pb-0.5"
                     >
                       VIEW DOCUMENT
                     </a>
+                    {isAdmin && (
+                      <button
+                        type="button"
+                        onClick={() => handleDeletePaper(paper._id)}
+                        className="inline-block font-sans text-[10px] tracking-[0.25em] uppercase text-red-700/80 hover:text-red-950 transition-colors duration-300 border-b border-red-700/20 hover:border-red-950/40 pb-0.5"
+                      >
+                        DELETE
+                      </button>
+                    )}
                   </td>
                 </motion.tr>
               ))}

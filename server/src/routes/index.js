@@ -19,6 +19,7 @@ import subjectRouter from './subject.routes.js';
 import syllabusRouter from './syllabus.routes.js';
 import branchRouter from './branch.routes.js';
 import semesterRouter from './semester.routes.js';
+import aiRouter from './ai.routes.js';
 
 
 const router = Router();
@@ -65,6 +66,9 @@ router.use('/branch', branchRouter);
 
 // Semester endpoints (CRUD) -> /api/v1/semester
 router.use('/semester', semesterRouter);
+
+// AI Cognitive endpoints (blueprint compiling, etc.) -> /api/v1/ai
+router.use('/ai', aiRouter);
 
 
 export default router;

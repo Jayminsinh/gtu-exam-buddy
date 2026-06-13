@@ -3,12 +3,12 @@
  * @description Axios instance pre-configured for the GTU Exam Buddy backend.
  *              Auto-injects Bearer tokens and handles silent 401 refresh flows.
  *
- * Base URL: http://localhost:5000/api/v1
+ * Base URL: VITE_API_URL or same-origin /api/v1 fallback.
  */
 
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

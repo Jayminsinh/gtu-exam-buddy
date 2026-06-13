@@ -6,7 +6,7 @@
 
 import Syllabus from '../models/syllabus.model.js';
 import Subject from '../models/subject.model.js';
-import cloudinaryService from './cloudinary.service.js';
+import supabaseService from './supabase.service.js';
 import ApiError from '../utils/ApiError.js';
 import { PAGINATION } from '../utils/constants.js';
 
@@ -27,8 +27,8 @@ const uploadSyllabus = async ({ metadata, localFilePath, userId }) => {
     throw ApiError.notFound('Associated subject not found.');
   }
 
-  // 1. Upload file to Cloudinary
-  const { secure_url, public_id } = await cloudinaryService.uploadPDF(localFilePath);
+  // 1. Upload file to Supabase Storage
+  const { secure_url, public_id } = await supabaseService.uploadPDF(localFilePath);
 
   try {
     // 2. Mark any current active latest syllabus for this subject as false
@@ -51,10 +51,10 @@ const uploadSyllabus = async ({ metadata, localFilePath, userId }) => {
     // ──────────────────────────────────────────────
     // Transactional Rollback
     // ──────────────────────────────────────────────
-    // If saving metadata to the database fails, we must remove the uploaded PDF from Cloudinary
+    // If saving metadata to the database fails, we must remove the uploaded PDF from Supabase
     // to prevent leaving orphaned files consuming remote storage.
-    await cloudinaryService.deletePDF(public_id).catch((cleanupError) => {
-      console.error(`⚠️ Failed to clean up Cloudinary upload: ${public_id} after DB write error`, cleanupError);
+    await supabaseService.deletePDF(public_id).catch((cleanupError) => {
+      console.error(`⚠️ Failed to clean up Supabase upload: ${public_id} after DB write error`, cleanupError);
     });
 
     throw error;
@@ -212,8 +212,8 @@ const deleteSyllabus = async (id) => {
   const wasLatest = syllabus.isLatest;
   const subjectId = syllabus.subject;
 
-  // 1. Delete physical asset from Cloudinary
-  await cloudinaryService.deletePDF(syllabus.publicId);
+  // 1. Delete physical asset from Supabase Storage
+  await supabaseService.deletePDF(syllabus.publicId);
 
   // 2. Delete metadata document from database
   await syllabus.deleteOne();

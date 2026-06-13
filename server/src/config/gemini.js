@@ -17,7 +17,7 @@
  *   1. npm install @google/generative-ai
  *   2. Add the following to your .env:
  *        GEMINI_API_KEY=your_gemini_api_key
- *        GEMINI_MODEL=gemini-2.0-flash     (optional, defaults to gemini-2.0-flash)
+ *        GEMINI_MODEL=gemini-2.5-flash     (optional, defaults to gemini-2.5-flash)
  *
  * NOTE: These values are read directly from process.env because
  *       config/index.js doesn't include a gemini group yet.
@@ -32,7 +32,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 // ──────────────────────────────────────────────
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
 // ──────────────────────────────────────────────
 // Validate API Key (non-blocking warning)
@@ -66,9 +66,9 @@ const genAI = new GoogleGenerativeAI(GEMINI_API_KEY || '');
  * The model instance configured with a specific Gemini model.
  *
  * Available models (as of 2025):
- *   - gemini-2.0-flash   → fast, cost-effective (default)
+ *   - gemini-2.0-flash   → legacy fast, cost-effective
  *   - gemini-2.5-pro     → most capable, best reasoning
- *   - gemini-2.5-flash   → balanced speed & quality
+ *   - gemini-2.5-flash   → balanced speed & quality (default)
  *
  * Change the default by setting GEMINI_MODEL in your .env.
  */
