@@ -1,9 +1,8 @@
 /**
  * @file Main Execution Entrypoint
  * @description Boots up the server. Establishes the database connection,
- *              listens on the configured port, and handles lifecycle signals
- *              (like uncaught exceptions, unhandled rejections, and termination
- *              signals) to ensure a graceful, zero-downtime-friendly shutdown.
+ *              listens on the configured port, and handles lifecycle signals.
+ *              (Restarts nodemon to load updated env keys - complete fallback updated).
  */
 
 import app from './src/app.js';

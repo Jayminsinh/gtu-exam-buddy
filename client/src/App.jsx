@@ -6,47 +6,56 @@
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
-import Landing from './pages/Landing';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import LandingPage from './pages/LandingPage';
 import Branches from './pages/Branches';
 import Semesters from './pages/Semesters';
 import Subjects from './pages/Subjects';
 import Papers from './pages/Papers';
 import StudentSearch from './pages/StudentSearch';
-import AiAssistant from './pages/AiAssistant';
 import DashboardLayout from './layouts/DashboardLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
     <>
-      <Toaster 
-        position="top-right" 
+      <Toaster
+        position="bottom-right"
+        gap={8}
+        visibleToasts={4}
         toastOptions={{
           style: {
-            background: '#FAF8F5',
-            color: '#1C1917',
-            fontFamily: 'Inter, sans-serif',
-            fontSize: '11px',
-            letterSpacing: '0.05em',
-            borderRadius: '0px',
-            border: '0.5px solid rgba(46, 42, 37, 0.1)',
-          }
-        }} 
+            background: '#ffffff',
+            border: '1px solid rgba(128,38,211,0.15)',
+            color: '#1a1a1a',
+            borderRadius: '10px',
+            fontSize: '14px',
+            fontFamily: 'Inter, -apple-system, sans-serif',
+            boxShadow: '0 8px 32px rgba(128,38,211,0.08), 0 0 0 1px rgba(128,38,211,0.02)',
+            backdropFilter: 'blur(16px)',
+            padding: '14px 16px',
+            lineHeight: '1.5',
+          },
+          classNames: {
+            title:       'font-medium text-[#1a1a1a] text-[14px]',
+            description: 'text-[#666666] text-[13px] mt-0.5',
+            success:     'border-l-[3px] border-l-[#a04df3]',
+            error:       'border-l-[3px] border-l-[#ff4d4d]',
+            warning:     'border-l-[3px] border-l-[#ffb300]',
+            info:        'border-l-[3px] border-l-[#2e54fe]',
+            actionButton:'bg-[rgba(128,38,211,0.08)] text-[#8026d3] text-[12px] rounded-md px-3 py-1.5 hover:bg-[rgba(128,38,211,0.12)] transition-colors',
+            cancelButton:'text-[#777777] text-[12px] hover:text-[#1a1a1a] transition-colors',
+          },
+        }}
       />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/" element={<LandingPage />} />
           
           {/* Protected Administrative Dashboard Layout */}
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<DashboardLayout />}>
               {/* Student Search and Nested CRUD pages */}
               <Route index element={<StudentSearch />} />
-              <Route path="ai-assistant" element={<AiAssistant />} />
               <Route path="branches" element={<Branches />} />
               <Route path="semesters" element={<Semesters />} />
               <Route path="subjects" element={<Subjects />} />

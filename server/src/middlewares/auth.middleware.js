@@ -43,7 +43,7 @@ export const authenticate = asyncHandler(async (req, res, next) => {
     const decoded = jwt.verify(token, config.jwt.access.secret);
 
     // Debug log to inspect incoming token payload keys in your console
-    console.log('Decoded token payload:', decoded);
+    // console.log('Decoded token payload:', decoded);
 
     if (!decoded || typeof decoded !== 'object') {
       throw ApiError.unauthorized('Invalid token payload.');

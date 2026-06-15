@@ -75,28 +75,36 @@ const getAllPapers = async (query = {}) => {
   }
 
   // 3. Process Pagination Defaults
+  const parsedLimit = parseInt(limit, 10);
   const pageNum = Math.max(1, parseInt(page, 10) || PAGINATION.DEFAULT_PAGE);
-  let limitNum = Math.max(1, parseInt(limit, 10) || PAGINATION.DEFAULT_LIMIT);
-  if (limitNum > PAGINATION.MAX_LIMIT) {
+  // limit=0 means "fetch all"; absence of limit falls back to DEFAULT_LIMIT
+  let limitNum = isNaN(parsedLimit) ? PAGINATION.DEFAULT_LIMIT : parsedLimit;
+  if (limitNum < 0) limitNum = PAGINATION.DEFAULT_LIMIT;
+  if (limitNum > PAGINATION.MAX_LIMIT && limitNum !== 0) {
     limitNum = PAGINATION.MAX_LIMIT;
   }
-  const skip = (pageNum - 1) * limitNum;
 
   // 4. Query Mongoose database
-  const papers = await Paper.find(filter)
+  let dbQuery = Paper.find(filter)
     .sort({ createdAt: -1 }) // Latest uploads first
-    .skip(skip)
-    .limit(limitNum)
     .populate('uploadedBy', 'name email role'); // Populate uploader details
 
-  const totalPapers = await Paper.countDocuments(filter);
+  if (limitNum > 0) {
+    const skip = (pageNum - 1) * limitNum;
+    dbQuery = dbQuery.skip(skip).limit(limitNum);
+  }
+
+  const [papers, totalPapers] = await Promise.all([
+    dbQuery,
+    Paper.countDocuments(filter),
+  ]);
 
   return {
     papers,
     totalPapers,
     page: pageNum,
     limit: limitNum,
-    totalPages: Math.ceil(totalPapers / limitNum),
+    totalPages: limitNum > 0 ? Math.ceil(totalPapers / limitNum) : 1,
   };
 };
 
