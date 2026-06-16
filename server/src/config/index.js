@@ -18,7 +18,9 @@
 // 1. Load .env file into process.env
 // ──────────────────────────────────────────────
 import dotenv from 'dotenv';
-dotenv.config(); // reads from project-root .env by default
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config(); // reads from project-root .env by default
+}
 
 // ──────────────────────────────────────────────
 // 2. Validate required environment variables

@@ -2,7 +2,7 @@
  * @file Main Execution Entrypoint
  * @description Boots up the server. Establishes the database connection,
  *              listens on the configured port, and handles lifecycle signals.
- *              (Restarts nodemon to load updated env keys - complete fallback updated).
+ *              (Restarts nodemon to load updated env keys - dotenv configuration updated).
  */
 
 import app from './src/app.js';
