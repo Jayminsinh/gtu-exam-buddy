@@ -307,7 +307,22 @@ export default function StudentSearch() {
       toast.success('IMP Blueprint PDF compiled successfully.');
     } catch (error) {
       console.error('Failed to generate blueprint PDF:', error);
-      toast.error('Failed to compile blueprint PDF. Please try again.');
+      let serverMessage = 'Failed to compile blueprint PDF. Please try again.';
+      if (error.response?.data instanceof Blob) {
+        try {
+          const text = await error.response.data.text();
+          const parsed = JSON.parse(text);
+          console.error('Server response JSON:', parsed);
+          if (parsed.message) {
+            serverMessage = parsed.message;
+          }
+        } catch (parseErr) {
+          console.error('Failed to parse error blob:', parseErr);
+        }
+      } else if (error.response?.data?.message) {
+        serverMessage = error.response.data.message;
+      }
+      toast.error(serverMessage);
     } finally {
       setGeneratingBlueprint(false);
     }
