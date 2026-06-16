@@ -1,10 +1,4 @@
-if (typeof global.DOMMatrix === 'undefined') {
-  global.DOMMatrix = class DOMMatrix {};
-}
-if (typeof global.ImageData === 'undefined') {
-  global.ImageData = class ImageData {};
-}
-
+import './src/utils/polyfills.js';
 import dotenv from 'dotenv';
 // Load environment variables at the very top for Vercel compatibility
 dotenv.config(); 
