@@ -100,14 +100,18 @@ const startServer = async () => {
     // 1. Connect to MongoDB Atlas first
     await connectDB();
 
-    // 2. Start the Express HTTP Server
-    server = app.listen(config.server.port, () => {
-      console.log(
-        `🚀  Server is listening on port: ${config.server.port}` +
-          `\n    Mode : ${config.server.nodeEnv}` +
-          `\n    URL  : http://localhost:${config.server.port}\n`
-      );
-    });
+    // 2. Start the Express HTTP Server conditionally (disabled in production serverless mode)
+    if (process.env.NODE_ENV !== 'production') {
+      server = app.listen(config.server.port, () => {
+        console.log(
+          `🚀  Server is listening on port: ${config.server.port}` +
+            `\n    Mode : ${config.server.nodeEnv}` +
+            `\n    URL  : http://localhost:${config.server.port}\n`
+        );
+      });
+    } else {
+      console.log('⚡ Running in Serverless Production Mode');
+    }
   } catch (error) {
     console.error(`\n❌  Failed to start server: ${error.message}\n`);
     process.exit(1);
@@ -115,3 +119,5 @@ const startServer = async () => {
 };
 
 startServer();
+
+export default app;
