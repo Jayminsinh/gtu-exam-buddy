@@ -1,10 +1,3 @@
-/**
- * @file Express Application Entrypoint
- * @description Creates the Express app, registers global security, parsing,
- *              logging, and optimization middlewares, mounts application routes,
- *              and configures global error handling.
- */
-
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -22,14 +15,10 @@ import ApiError from './utils/ApiError.js';
 // Initialize the Express app
 const app = express();
 
-// ──────────────────────────────────────────────
-// 1. Global Pre-Routing Middlewares
-// ──────────────────────────────────────────────
-
-// Helmet: Secure the Express app by setting various HTTP headers
+// Secure HTTP headers
 app.use(helmet());
 
-// CORS: Enable Cross-Origin Resource Sharing
+// Cross-Origin Resource Sharing
 app.use(
   cors({
     origin: process.env.NODE_ENV === 'production' ? true : config.client.url,
@@ -39,63 +28,46 @@ app.use(
   })
 );
 
-// Morgan: HTTP request logging
-// 'dev' format provides colored, concise logs for local development.
-// 'combined' is standard Apache style logs for production.
+// HTTP request logging
 const logFormat = config.server.isProd ? 'combined' : 'dev';
 app.use(morgan(logFormat));
 
-// Body Parsers: Parse incoming request bodies
-// Limit body sizes to prevent Denial of Service (DoS) attacks
+// Parse body payloads with size limitations
 app.use(express.json({ limit: '16kb' }));
 app.use(express.urlencoded({ extended: true, limit: '16kb' }));
 
-// Cookie Parser: Parse Cookie headers and populate req.cookies
+// Parse request cookies
 app.use(cookieParser());
 
-// Compression: Compress response bodies for all requests (Gzip compression)
+// Response compression
 app.use(compression());
 
-// Global Rate Limiting: Limit repeated requests to public APIs
+// Rate limiting for public APIs
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
   message: {
     success: false,
     statusCode: 429,
     message: 'Too many requests from this IP, please try again after 15 minutes.',
   },
 });
-
-// Apply rate limiter to all API endpoints
 app.use('/api', limiter);
 
-// ──────────────────────────────────────────────
-// 2. Route Mounting
-// ──────────────────────────────────────────────
-
-// Serve uploaded files statically (if any exist in the uploads folder)
+// Serve static assets from uploads folder
 app.use('/uploads', express.static('uploads'));
 
-// Mount central router registry under the configured prefix (e.g. /api/v1)
+// Central routing registry prefix
 app.use(API.PREFIX, rootRouter);
 
-// ──────────────────────────────────────────────
-// 3. Fallback Route (404 Not Found)
-// ──────────────────────────────────────────────
-
-// Catch any routes that aren't defined above and throw a 404 ApiError
+// Fallback 404 handler for undefined routes
 app.use((req, res, next) => {
   next(ApiError.notFound(`Route not found: ${req.originalUrl}`));
 });
 
-// ──────────────────────────────────────────────
-// 4. Global Post-Routing Error Handler
-// ──────────────────────────────────────────────
-
-// Express global error handler middleware (must be registered last)
+// Central error handling middleware
 app.use(errorHandler);
 
 export default app;
