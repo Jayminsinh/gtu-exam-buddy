@@ -5,6 +5,10 @@
  *              (Restarts nodemon to load updated env keys - dotenv configuration updated).
  */
 
+if (process.env.NODE_ENV === 'production') {
+  process.env.DOTENV_CONFIG_PATH = '/dev/null';
+}
+
 import app from './src/app.js';
 import config from './src/config/index.js';
 import connectDB from './src/config/db.js';
