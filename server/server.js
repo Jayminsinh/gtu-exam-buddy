@@ -10,6 +10,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 import app from './src/app.js';
+
+app.get('/', (req, res) => {
+  return res.status(200).json({ status: "healthy", message: "GTU Exam Buddy API Online" });
+});
 import config from './src/config/index.js';
 import connectDB from './src/config/db.js';
 import mongoose from 'mongoose';
