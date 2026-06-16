@@ -20,7 +20,7 @@ import Paper from '../models/paper.model.js';
 import geminiModel from '../config/gemini.js';
 import ApiError from '../utils/ApiError.js';
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || 'placeholder_key' });
 
 // ──────────────────────────────────────────────
 // PDF Text Extraction Helpers

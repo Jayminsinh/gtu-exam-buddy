@@ -25,10 +25,10 @@ import ApiError from '../utils/ApiError.js';
 // Initialize Supabase Client
 // ──────────────────────────────────────────────
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
+const supabaseUrl = process.env.SUPABASE_URL || 'https://placeholder.supabase.co';
+const supabaseKey = process.env.SUPABASE_ANON_KEY || 'placeholder';
+
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const BUCKET_NAME = 'papers';
 

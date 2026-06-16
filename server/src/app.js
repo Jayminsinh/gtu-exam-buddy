@@ -32,8 +32,8 @@ app.use(helmet());
 // CORS: Enable Cross-Origin Resource Sharing
 app.use(
   cors({
-    origin: config.client.url,
-    credentials: true, // Allow session cookies/JWT tokens to be sent
+    origin: process.env.NODE_ENV === 'production' ? true : config.client.url,
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })

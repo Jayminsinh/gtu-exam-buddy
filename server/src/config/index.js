@@ -46,12 +46,16 @@ const missingVars = REQUIRED_ENV_VARS.filter(
 );
 
 if (missingVars.length > 0) {
-  console.error(
-    `\n❌  Missing required environment variables:\n` +
-      missingVars.map((v) => `   • ${v}`).join('\n') +
-      `\n\n💡  Copy .env.example to .env and fill in the values.\n`
-  );
-  process.exit(1);
+  const errorMsg = `\n❌  Missing required environment variables:\n` +
+    missingVars.map((v) => `   • ${v}`).join('\n') +
+    `\n\n💡  Copy .env.example to .env and fill in the values.\n`;
+
+  if (process.env.NODE_ENV === 'production') {
+    console.warn(errorMsg);
+  } else {
+    console.error(errorMsg);
+    process.exit(1);
+  }
 }
 
 // ──────────────────────────────────────────────

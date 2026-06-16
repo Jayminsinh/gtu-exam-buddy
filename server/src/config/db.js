@@ -30,7 +30,10 @@ import config from './index.js';
  */
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(config.database.uri);
+    const conn = await mongoose.connect(config.database.uri, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000
+    });
 
     console.log(
       `\n✅  MongoDB connected successfully` +
@@ -43,10 +46,12 @@ const connectDB = async () => {
         `\n   Error: ${error.message}\n`
     );
 
-    // Exit with failure code — there's no point running the server
-    // if the database is unreachable. A process manager (PM2, Docker)
-    // will automatically restart it.
-    process.exit(1);
+    if (process.env.NODE_ENV !== 'production') {
+      // Exit with failure code — there's no point running the server
+      // if the database is unreachable. A process manager (PM2, Docker)
+      // will automatically restart it.
+      process.exit(1);
+    }
   }
 };
 
