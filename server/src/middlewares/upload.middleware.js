@@ -168,7 +168,7 @@ export const upload = multer({
  *
  * @param {string | undefined} filePath  Absolute path returned by multer (req.file.path)
  */
-export const cleanUpload = (filePath) => {
+export const uploadSinglePaper = (filePath) => {
   if (!filePath) return;
   try {
     if (fs.existsSync(filePath)) {
