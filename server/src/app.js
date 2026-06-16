@@ -19,9 +19,18 @@ const app = express();
 app.use(helmet());
 
 // Cross-Origin Resource Sharing
+const allowedOrigins = [
+  config.client.url,
+  'https://gtu-exam-buddy.vercel.app',
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.NODE_ENV === 'production' ? true : config.client.url,
+    origin: (origin, cb) => {
+      // Allow server-to-server (no origin) and whitelisted origins
+      if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+      cb(new Error(`CORS blocked: ${origin}`));
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
