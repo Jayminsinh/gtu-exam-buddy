@@ -14,11 +14,6 @@ dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
 let server;
 
-// Root liveness health check route
-app.get('/', (req, res) => {
-  return res.status(200).json({ status: "healthy", message: "GTU Exam Buddy API Online" });
-});
-
 // Clean up database connections and resources on shutdown
 const gracefulShutdown = (signal) => {
   console.log(`\n🛑 Received ${signal}. Starting graceful shutdown...`);

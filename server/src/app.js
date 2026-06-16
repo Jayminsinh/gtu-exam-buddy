@@ -62,6 +62,11 @@ app.use('/uploads', express.static('uploads'));
 // Central routing registry prefix
 app.use(API.PREFIX, rootRouter);
 
+// Root health check
+app.get('/', (req, res) => {
+  return res.status(200).json({ status: "healthy", message: "GTU Exam Buddy API Online" });
+});
+
 // Fallback 404 handler for undefined routes
 app.use((req, res, next) => {
   next(ApiError.notFound(`Route not found: ${req.originalUrl}`));
