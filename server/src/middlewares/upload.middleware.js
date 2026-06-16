@@ -12,9 +12,14 @@ import ApiError from '../utils/ApiError.js';
 import { UPLOAD } from '../utils/constants.js';
 
 // Ensure the local upload folder exists
-const uploadDir = './uploads';
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+const uploadDir = process.env.NODE_ENV === 'production' ? '/tmp/uploads' : './uploads';
+
+try {
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+} catch (err) {
+  console.warn("⚠️ Vercel read-only environment, skipping local folder creation:", err.message);
 }
 
 // ──────────────────────────────────────────────
